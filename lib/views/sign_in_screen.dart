@@ -6,21 +6,17 @@ import 'package:forecasting_app/views/congratulation_screen.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 
-class SignInScreen extends StatefulWidget {
+class SignInScreen extends StatelessWidget {
   const SignInScreen({super.key});
 
   @override
-  State<SignInScreen> createState() => _SignInScreenState();
-}
-
-class _SignInScreenState extends State<SignInScreen> {
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  final isSecured = ValueNotifier<bool>(false);
-  final isRemembered = ValueNotifier<bool>(false);
-  @override
   Widget build(BuildContext context) {
+    TextEditingController emailController = TextEditingController();
+    TextEditingController passwordController = TextEditingController();
+    final isSecured = ValueNotifier<bool>(false);
+    final isRemembered = ValueNotifier<bool>(false);
     final formKey = GlobalKey<FormState>();
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -48,6 +44,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
                     SizedBox(height: 6.h),
                     TextFormField(
+                      onChanged: (value) {},
                       controller: emailController,
                       keyboardType: TextInputType.emailAddress,
                       decoration: appTextFieldStyle.copyWith(
@@ -60,6 +57,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       builder:
                           (BuildContext context, dynamic value, Widget? child) {
                         return TextFormField(
+                          onChanged: (value) {},
                           controller: passwordController,
                           keyboardType: TextInputType.visiblePassword,
                           obscureText: isSecured.value,
@@ -110,17 +108,12 @@ class _SignInScreenState extends State<SignInScreen> {
                       ],
                     ),
                     SizedBox(height: 2.h),
-                    ElevatedButton(
+                    LoginButton(
+                      emailController: emailController,
+                      passwordController: passwordController,
                       onPressed: () {
                         Get.to(() => const CongratulationScreens());
                       },
-                      child: Text(
-                        "Login",
-                        style: appFonts.bodyStyle.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
                     ),
                   ],
                 ),
@@ -130,6 +123,46 @@ class _SignInScreenState extends State<SignInScreen> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class LoginButton extends StatelessWidget {
+  const LoginButton({
+    Key? key,
+    required this.onPressed,
+    required this.emailController,
+    required this.passwordController,
+  }) : super(key: key);
+
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
+  final VoidCallback? onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder(
+      valueListenable: emailController,
+      builder: (BuildContext context, dynamic value, Widget? child) {
+        return ValueListenableBuilder(
+          valueListenable: (passwordController),
+          builder: (BuildContext context, dynamic value, Widget? child) {
+            return ElevatedButton(
+              onPressed: (passwordController.text.isEmpty ||
+                      emailController.text.isEmpty)
+                  ? null
+                  : onPressed,
+              child: Text(
+                "Login",
+                style: appFonts.bodyStyle.copyWith(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }

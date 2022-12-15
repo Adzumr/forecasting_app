@@ -14,6 +14,12 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  @override
+  void initState() {
+    super.initState();
+    fullNameController.addListener(() {});
+  }
+
   TextEditingController fullNameController = TextEditingController();
   TextEditingController phoneNumberController = TextEditingController();
   TextEditingController countryController = TextEditingController();
@@ -104,17 +110,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     },
                   ),
                   SizedBox(height: 2.h),
-                  ElevatedButton(
+                  SignupButton(
+                    fullNameController: fullNameController,
+                    phoneNumberController: phoneNumberController,
+                    countryController: countryController,
+                    emailController: emailController,
+                    passwordController: passwordController,
                     onPressed: () {
                       Get.to(() => const CongratulationScreens());
                     },
-                    child: Text(
-                      "Signup",
-                      style: appFonts.bodyStyle.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
                   ),
                   SizedBox(height: 10.h),
                   const LoginWidget(
@@ -126,6 +130,72 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class SignupButton extends StatelessWidget {
+  const SignupButton(
+      {Key? key,
+      required this.fullNameController,
+      required this.phoneNumberController,
+      required this.countryController,
+      required this.emailController,
+      required this.passwordController,
+      required this.onPressed})
+      : super(key: key);
+
+  final TextEditingController fullNameController;
+  final TextEditingController phoneNumberController;
+  final TextEditingController countryController;
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
+  final VoidCallback? onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder(
+      valueListenable: fullNameController,
+      builder: (BuildContext context, dynamic value, Widget? child) {
+        return ValueListenableBuilder(
+          valueListenable: phoneNumberController,
+          builder: (BuildContext context, dynamic value, Widget? child) {
+            return ValueListenableBuilder(
+              valueListenable: countryController,
+              builder: (BuildContext context, dynamic value, Widget? child) {
+                return ValueListenableBuilder(
+                  valueListenable: emailController,
+                  builder:
+                      (BuildContext context, dynamic value, Widget? child) {
+                    return ValueListenableBuilder(
+                      valueListenable: passwordController,
+                      builder:
+                          (BuildContext context, dynamic value, Widget? child) {
+                        return ElevatedButton(
+                          onPressed: (fullNameController.text.isEmpty ||
+                                  phoneNumberController.text.isEmpty ||
+                                  countryController.text.isEmpty ||
+                                  emailController.text.isEmpty ||
+                                  passwordController.text.isEmpty)
+                              ? null
+                              : onPressed,
+                          child: Text(
+                            "Signup",
+                            style: appFonts.bodyStyle.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                );
+              },
+            );
+          },
+        );
+      },
     );
   }
 }
