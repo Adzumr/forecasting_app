@@ -2,33 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:forecasting_app/main.dart';
 import 'package:forecasting_app/utils/textfield_style.dart';
 import 'package:forecasting_app/utils/widgets/login_widget.dart';
-import 'package:forecasting_app/views/congratulation_screen.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 
-class SignUpScreen extends StatefulWidget {
+import '../controllers/onboarding_controller.dart';
+
+class SignUpScreen extends StatelessWidget {
   const SignUpScreen({super.key});
 
   @override
-  State<SignUpScreen> createState() => _SignUpScreenState();
-}
-
-class _SignUpScreenState extends State<SignUpScreen> {
-  @override
-  void initState() {
-    super.initState();
-    fullNameController.addListener(() {});
-  }
-
-  TextEditingController fullNameController = TextEditingController();
-  TextEditingController phoneNumberController = TextEditingController();
-  TextEditingController countryController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  final isSecured = ValueNotifier<bool>(false);
-  @override
   Widget build(BuildContext context) {
+    TextEditingController fullNameController = TextEditingController();
+    TextEditingController phoneNumberController = TextEditingController();
+    TextEditingController countryController = TextEditingController();
+    TextEditingController emailController = TextEditingController();
+    TextEditingController passwordController = TextEditingController();
+    final isSecured = ValueNotifier<bool>(false);
+    final isLoading = ValueNotifier<bool>(false);
     final formKey = GlobalKey<FormState>();
+    final controller = Get.put(OnboardingController());
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -110,14 +102,35 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     },
                   ),
                   SizedBox(height: 2.h),
-                  SignupButton(
-                    fullNameController: fullNameController,
-                    phoneNumberController: phoneNumberController,
-                    countryController: countryController,
-                    emailController: emailController,
-                    passwordController: passwordController,
-                    onPressed: () {
-                      Get.to(() => const CongratulationScreens());
+                  ValueListenableBuilder(
+                    valueListenable: isLoading,
+                    builder:
+                        (BuildContext context, dynamic value, Widget? child) {
+                      return isLoading.value == true
+                          ? const Center(
+                              child: CircularProgressIndicator.adaptive(),
+                            )
+                          : SignupButton(
+                              fullNameController: fullNameController,
+                              phoneNumberController: phoneNumberController,
+                              countryController: countryController,
+                              emailController: emailController,
+                              passwordController: passwordController,
+                              onPressed: () async {
+                                isLoading.value = true;
+                                try {
+                                  await controller.registerUser(
+                                    name: fullNameController.text,
+                                    phoneNumber: phoneNumberController.text,
+                                    country: countryController.text,
+                                    emailAdress: emailController.text,
+                                    password: passwordController.text,
+                                  );
+                                } finally {
+                                  isLoading.value = false;
+                                }
+                              },
+                            );
                     },
                   ),
                   SizedBox(height: 10.h),

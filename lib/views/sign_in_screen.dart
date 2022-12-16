@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:forecasting_app/controllers/onboarding_controller.dart';
 import 'package:forecasting_app/main.dart';
 import 'package:forecasting_app/utils/textfield_style.dart';
 import 'package:forecasting_app/utils/widgets/signup_widget.dart';
-import 'package:forecasting_app/views/congratulation_screen.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 
@@ -13,7 +13,9 @@ class SignInScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     TextEditingController emailController = TextEditingController();
     TextEditingController passwordController = TextEditingController();
+    final controller = Get.put(OnboardingController());
     final isSecured = ValueNotifier<bool>(false);
+    final isLoading = ValueNotifier<bool>(false);
     final isRemembered = ValueNotifier<bool>(false);
     final formKey = GlobalKey<FormState>();
 
@@ -108,11 +110,29 @@ class SignInScreen extends StatelessWidget {
                       ],
                     ),
                     SizedBox(height: 2.h),
-                    LoginButton(
-                      emailController: emailController,
-                      passwordController: passwordController,
-                      onPressed: () {
-                        Get.to(() => const CongratulationScreens());
+                    ValueListenableBuilder(
+                      valueListenable: isLoading,
+                      builder:
+                          (BuildContext context, dynamic value, Widget? child) {
+                        return isLoading.value == true
+                            ? const Center(
+                                child: CircularProgressIndicator.adaptive(),
+                              )
+                            : LoginButton(
+                                emailController: emailController,
+                                passwordController: passwordController,
+                                onPressed: () async {
+                                  isLoading.value = true;
+                                  try {
+                                    await controller.login(
+                                      emailAdress: emailController.text,
+                                      password: passwordController.text,
+                                    );
+                                  } finally {
+                                    isLoading.value = false;
+                                  }
+                                },
+                              );
                       },
                     ),
                   ],
