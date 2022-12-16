@@ -20,6 +20,7 @@ class SignInScreen extends StatelessWidget {
     final formKey = GlobalKey<FormState>();
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.all(25.sp),
@@ -68,7 +69,6 @@ class SignInScreen extends StatelessWidget {
                       builder:
                           (BuildContext context, dynamic value, Widget? child) {
                         return TextFormField(
-                          //  r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$
                           validator: (value) {
                             if (value!.trim().isEmpty) {
                               return "Enter password";

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:forecasting_app/main.dart';
 import 'package:forecasting_app/utils/textfield_style.dart';
 import 'package:forecasting_app/utils/widgets/login_widget.dart';
@@ -45,6 +46,12 @@ class SignUpScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 6.h),
                   TextFormField(
+                    validator: (value) {
+                      if (value!.trim().isEmpty) {
+                        return "Enter full name";
+                      }
+                      return null;
+                    },
                     controller: fullNameController,
                     keyboardType: TextInputType.name,
                     decoration: appTextFieldStyle.copyWith(
@@ -53,6 +60,15 @@ class SignUpScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 2.h),
                   TextFormField(
+                    validator: (value) {
+                      if (value!.trim().isEmpty) {
+                        return "Enter phone number";
+                      }
+                      return null;
+                    },
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9]")),
+                    ],
                     controller: phoneNumberController,
                     keyboardType: TextInputType.phone,
                     decoration: appTextFieldStyle.copyWith(
@@ -61,6 +77,12 @@ class SignUpScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 2.h),
                   TextFormField(
+                    validator: (value) {
+                      if (value!.trim().isEmpty) {
+                        return "Enter country";
+                      }
+                      return null;
+                    },
                     controller: countryController,
                     keyboardType: TextInputType.text,
                     decoration: appTextFieldStyle.copyWith(
@@ -70,6 +92,16 @@ class SignUpScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 2.h),
                   TextFormField(
+                    validator: (value) {
+                      if (value!.trim().isEmpty) {
+                        return "Enter email address";
+                      } else if (!RegExp(
+                              r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
+                          .hasMatch(value)) {
+                        return "Please enter a valid email address";
+                      }
+                      return null;
+                    },
                     controller: emailController,
                     keyboardType: TextInputType.emailAddress,
                     decoration: appTextFieldStyle.copyWith(
@@ -82,6 +114,16 @@ class SignUpScreen extends StatelessWidget {
                     builder:
                         (BuildContext context, dynamic value, Widget? child) {
                       return TextFormField(
+                        validator: (value) {
+                          if (value!.trim().isEmpty) {
+                            return "Enter password";
+                          } else if (!RegExp(
+                                  r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
+                              .hasMatch(value)) {
+                            return "Please enter a valid password";
+                          }
+                          return null;
+                        },
                         controller: passwordController,
                         keyboardType: TextInputType.visiblePassword,
                         obscureText: isSecured.value,
@@ -117,17 +159,19 @@ class SignUpScreen extends StatelessWidget {
                               emailController: emailController,
                               passwordController: passwordController,
                               onPressed: () async {
-                                isLoading.value = true;
-                                try {
-                                  await controller.registerUser(
-                                    name: fullNameController.text,
-                                    phoneNumber: phoneNumberController.text,
-                                    country: countryController.text,
-                                    emailAdress: emailController.text,
-                                    password: passwordController.text,
-                                  );
-                                } finally {
-                                  isLoading.value = false;
+                                if (formKey.currentState!.validate()) {
+                                  isLoading.value = true;
+                                  try {
+                                    await controller.registerUser(
+                                      name: fullNameController.text,
+                                      phoneNumber: phoneNumberController.text,
+                                      country: countryController.text,
+                                      emailAdress: emailController.text,
+                                      password: passwordController.text,
+                                    );
+                                  } finally {
+                                    isLoading.value = false;
+                                  }
                                 }
                               },
                             );
