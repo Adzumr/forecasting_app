@@ -46,7 +46,16 @@ class SignInScreen extends StatelessWidget {
                     ),
                     SizedBox(height: 6.h),
                     TextFormField(
-                      onChanged: (value) {},
+                      validator: (value) {
+                        if (value!.trim().isEmpty) {
+                          return "Enter email address";
+                        } else if (!RegExp(
+                                r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
+                            .hasMatch(value)) {
+                          return "Please enter a valid email address";
+                        }
+                        return null;
+                      },
                       controller: emailController,
                       keyboardType: TextInputType.emailAddress,
                       decoration: appTextFieldStyle.copyWith(
@@ -59,7 +68,17 @@ class SignInScreen extends StatelessWidget {
                       builder:
                           (BuildContext context, dynamic value, Widget? child) {
                         return TextFormField(
-                          onChanged: (value) {},
+                          //  r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$
+                          validator: (value) {
+                            if (value!.trim().isEmpty) {
+                              return "Enter password";
+                            } else if (!RegExp(
+                                    r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
+                                .hasMatch(value)) {
+                              return "Please enter a valid password";
+                            }
+                            return null;
+                          },
                           controller: passwordController,
                           keyboardType: TextInputType.visiblePassword,
                           obscureText: isSecured.value,
@@ -122,14 +141,16 @@ class SignInScreen extends StatelessWidget {
                                 emailController: emailController,
                                 passwordController: passwordController,
                                 onPressed: () async {
-                                  isLoading.value = true;
-                                  try {
-                                    await controller.login(
-                                      emailAdress: emailController.text,
-                                      password: passwordController.text,
-                                    );
-                                  } finally {
-                                    isLoading.value = false;
+                                  if (formKey.currentState!.validate()) {
+                                    isLoading.value = true;
+                                    try {
+                                      await controller.login(
+                                        emailAdress: emailController.text,
+                                        password: passwordController.text,
+                                      );
+                                    } finally {
+                                      isLoading.value = false;
+                                    }
                                   }
                                 },
                               );
