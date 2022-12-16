@@ -7,4 +7,9 @@ class AppColors {
   final blueColor = const Color(0xFF4A91FF);
   final redColor = const Color(0xFFFF6D6D);
   final shadowRedColor = const Color(0xFFFFD6D6);
+
+
+  // gradient colors
+  final gradientColor2 = const Color(0xFF4A9BF9);
+  final gradientColor1 = const Color(0xFF48BAE3);
 }

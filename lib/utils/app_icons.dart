@@ -1,5 +1,9 @@
 class AppIcons {
   final logo = "assets/logo.png";
+  final logOut = "assets/switch.png";
+  final bullet = "assets/bullet.png";
+  final smallVector = "assets/leftVector.png";
+  final vector = "assets/vector.png";
   final splash = "assets/splash.png";
   final cloudyIcon = "assets/cloudyIcon.png";
   final locationIcon = "assets/locationIcon.png";

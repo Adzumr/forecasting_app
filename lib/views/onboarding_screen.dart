@@ -21,8 +21,9 @@ class OnboardingScreen extends StatelessWidget {
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [
-                appColors.blueColor.withOpacity(.8),
-                appColors.blueColor,
+                appColors.gradientColor1,
+                appColors.gradientColor2,
+                appColors.gradientColor2,
               ],
             ),
           ),

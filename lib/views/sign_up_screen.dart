@@ -52,6 +52,11 @@ class SignUpScreen extends StatelessWidget {
                       }
                       return null;
                     },
+                    inputFormatters: [
+                      FilteringTextInputFormatter.deny(
+                          RegExp("[!@#\$%^&*()<>,./?]")),
+                      FilteringTextInputFormatter.deny(RegExp("[0-9]"))
+                    ],
                     controller: fullNameController,
                     keyboardType: TextInputType.name,
                     decoration: appTextFieldStyle.copyWith(
@@ -83,6 +88,11 @@ class SignUpScreen extends StatelessWidget {
                       }
                       return null;
                     },
+                    inputFormatters: [
+                      FilteringTextInputFormatter.deny(
+                          RegExp("[!@#\$%^&*()<>,./?]")),
+                      FilteringTextInputFormatter.deny(RegExp("[0-9]"))
+                    ],
                     controller: countryController,
                     keyboardType: TextInputType.text,
                     decoration: appTextFieldStyle.copyWith(
