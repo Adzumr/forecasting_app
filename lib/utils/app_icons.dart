@@ -4,6 +4,7 @@ class AppIcons {
   final bullet = "assets/bullet.png";
   final smallVector = "assets/leftVector.png";
   final vector = "assets/vector.png";
+  final calender = "assets/calender.png";
   final splash = "assets/splash.png";
   final cloudyIcon = "assets/cloudyIcon.png";
   final locationIcon = "assets/locationIcon.png";

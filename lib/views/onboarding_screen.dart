@@ -49,7 +49,9 @@ class OnboardingScreen extends StatelessWidget {
                     children: [
                       Text(
                         "Expore global map of wind, weather, and ocean conditions",
-                        style: appFonts.headingStyle,
+                        style: appFonts.subHeadingStyle.copyWith(
+                          color: appColors.blackColor,
+                        ),
                       ),
                       SizedBox(height: 2.h),
                       Text(

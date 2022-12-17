@@ -5,9 +5,14 @@ import 'package:sizer/sizer.dart';
 
 class AppFonts {
   final headingStyle = GoogleFonts.inter(
+    fontSize: 16.sp,
+    fontWeight: FontWeight.bold,
+    color: appColors.whiteColor,
+  );
+  final subHeadingStyle = GoogleFonts.inter(
     fontSize: 14.sp,
     fontWeight: FontWeight.bold,
-    color: appColors.blackColor,
+    color: appColors.whiteColor,
   );
   final bodyStyle = GoogleFonts.inter(
     fontSize: 11.sp,
@@ -15,7 +20,7 @@ class AppFonts {
   );
   final titleStyle = GoogleFonts.inter(
     fontSize: 12.sp,
-    color: appColors.blackColor,
+    color: appColors.whiteColor,
     fontWeight: FontWeight.bold,
   );
   final buttonTextStyle = GoogleFonts.overpass(

@@ -7,10 +7,45 @@ import 'package:forecasting_app/views/forecast_screen.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
+import '../models/cities_model.dart';
 import '../views/congratulation_screen.dart';
 
 class OnboardingController extends GetxController {
   LoginModel? loginModel;
+  CitiesModel? citiesModel;
+  Future getCitiesData({
+    String? token,
+  }) async {
+    const pageUrl = "city-list";
+    final header = {
+      "content-type": " application/json",
+      "Authorization": "Bearer $token",
+    };
+
+    try {
+      log("Loading...");
+      final response = await http.get(
+        Uri.parse(baseUrl + pageUrl),
+        headers: header,
+      );
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        log(response.body);
+        citiesModel = CitiesModel.fromJson(jsonDecode(response.body));
+        Get.to(() => const ForecastScreen());
+      } else {
+        log("${response.statusCode}");
+        Get.snackbar(
+          "Error",
+          "Invalid credentials",
+        );
+      }
+    } catch (e) {
+      log("Error: $e");
+    } finally {
+      log("Request completed");
+    }
+  }
+
   Future registerUser({
     String? name,
     String? emailAdress,
@@ -30,7 +65,7 @@ class OnboardingController extends GetxController {
       "country": country!.trim(),
     };
     try {
-      log("Authenticating");
+      log("Loading...");
       final response = await http.post(
         Uri.parse(baseUrl + pageUrl),
         body: jsonEncode(body),
@@ -68,23 +103,26 @@ class OnboardingController extends GetxController {
       "password": password!.trim(),
     };
     try {
-      log("Authenticating");
-      final response = await http.post(
+      log("Loading...");
+      await http
+          .post(
         Uri.parse(baseUrl + pageUrl),
         body: jsonEncode(body),
         headers: header,
-      );
-      if (response.statusCode >= 200 && response.statusCode < 300) {
-        loginModel = LoginModel.fromJson(jsonDecode(response.body));
-        log(response.body);
-        Get.to(() => const ForecastScreen());
-      } else {
-        log("${response.statusCode}");
-        Get.snackbar(
-          "Error",
-          "Invalid credentials",
-        );
-      }
+      )
+          .then((response) async {
+        if (response.statusCode >= 200 && response.statusCode < 300) {
+          log(response.body);
+          loginModel = LoginModel.fromJson(jsonDecode(response.body));
+          await getCitiesData(token: loginModel!.token);
+        } else {
+          log("${response.statusCode}");
+          Get.snackbar(
+            "Error",
+            "Invalid credentials",
+          );
+        }
+      });
     } catch (e) {
       log("Error: $e");
     } finally {
