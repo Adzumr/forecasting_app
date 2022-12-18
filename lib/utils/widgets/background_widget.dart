@@ -19,22 +19,6 @@ class BackgroundWidget extends StatelessWidget {
       height: MediaQuery.of(context).size.height,
       child: Stack(
         children: [
-          Container(
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    appColors.gradientColor1,
-                    appColors.gradientColor2,
-                    appColors.gradientColor2,
-                  ],
-                ),
-              ),
-              padding: EdgeInsets.all(20.sp),
-              child: child),
           Positioned(
             top: 8.h,
             child: Image(
@@ -51,6 +35,23 @@ class BackgroundWidget extends StatelessWidget {
                 appIcons.vector,
               ),
             ),
+          ),
+          Container(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  appColors.gradientColor1,
+                  appColors.gradientColor2,
+                  appColors.gradientColor2,
+                ],
+              ),
+            ),
+            padding: EdgeInsets.all(20.sp),
+            child: child,
           ),
         ],
       ),

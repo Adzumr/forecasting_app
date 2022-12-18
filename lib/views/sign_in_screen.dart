@@ -21,145 +21,150 @@ class SignInScreen extends StatelessWidget {
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.all(25.sp),
-          child: Form(
-            key: formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Image(
-                      image: AssetImage(appIcons.logo),
-                      height: 15.h,
-                    ),
-                    SizedBox(height: 1.h),
-                    Text(
-                      "Enter your email address and password",
-                      textAlign: TextAlign.center,
-                      style: appFonts.bodyStyle.copyWith(
-                        color: appColors.shadowColor,
+      body: WillPopScope(
+        onWillPop: () async {
+          return false;
+        },
+        child: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.all(25.sp),
+            child: Form(
+              key: formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Image(
+                        image: AssetImage(appIcons.logo),
+                        height: 15.h,
                       ),
-                    ),
-                    SizedBox(height: 6.h),
-                    TextFormField(
-                      validator: (value) {
-                        if (value!.trim().isEmpty) {
-                          return "Enter email address";
-                        } else if (!RegExp(
-                                r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
-                            .hasMatch(value)) {
-                          return "Please enter a valid email address";
-                        }
-                        return null;
-                      },
-                      controller: emailController,
-                      keyboardType: TextInputType.emailAddress,
-                      decoration: appTextFieldStyle.copyWith(
-                        labelText: "Email",
+                      SizedBox(height: 1.h),
+                      Text(
+                        "Enter your email address and password",
+                        textAlign: TextAlign.center,
+                        style: appFonts.bodyStyle.copyWith(
+                          color: appColors.shadowColor,
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 2.h),
-                    ValueListenableBuilder(
-                      valueListenable: isSecured,
-                      builder:
-                          (BuildContext context, dynamic value, Widget? child) {
-                        return TextFormField(
-                          validator: (value) {
-                            if (value!.trim().isEmpty) {
-                              return "Enter password";
-                            } else if (!RegExp(
-                                    r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
-                                .hasMatch(value)) {
-                              return "Please enter a valid password";
-                            }
-                            return null;
-                          },
-                          controller: passwordController,
-                          keyboardType: TextInputType.visiblePassword,
-                          obscureText: isSecured.value,
-                          decoration: appTextFieldStyle.copyWith(
-                            labelText: "Password",
-                            suffixIcon: InkWell(
-                              onTap: () {
-                                isSecured.value = !isSecured.value;
-                              },
-                              child: Icon(
-                                isSecured.value
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
+                      SizedBox(height: 6.h),
+                      TextFormField(
+                        validator: (value) {
+                          if (value!.trim().isEmpty) {
+                            return "Enter email address";
+                          } else if (!RegExp(
+                                  r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
+                              .hasMatch(value)) {
+                            return "Please enter a valid email address";
+                          }
+                          return null;
+                        },
+                        controller: emailController,
+                        keyboardType: TextInputType.emailAddress,
+                        decoration: appTextFieldStyle.copyWith(
+                          labelText: "Email",
+                        ),
+                      ),
+                      SizedBox(height: 2.h),
+                      ValueListenableBuilder(
+                        valueListenable: isSecured,
+                        builder: (BuildContext context, dynamic value,
+                            Widget? child) {
+                          return TextFormField(
+                            validator: (value) {
+                              if (value!.trim().isEmpty) {
+                                return "Enter password";
+                              } else if (!RegExp(
+                                      r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
+                                  .hasMatch(value)) {
+                                return "Please enter a valid password";
+                              }
+                              return null;
+                            },
+                            controller: passwordController,
+                            keyboardType: TextInputType.visiblePassword,
+                            obscureText: isSecured.value,
+                            decoration: appTextFieldStyle.copyWith(
+                              labelText: "Password",
+                              suffixIcon: InkWell(
+                                onTap: () {
+                                  isSecured.value = !isSecured.value;
+                                },
+                                child: Icon(
+                                  isSecured.value
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                ),
                               ),
                             ),
-                          ),
-                        );
-                      },
-                    ),
-                    SizedBox(height: 2.h),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        ValueListenableBuilder(
-                          valueListenable: isRemembered,
-                          builder: (BuildContext context, dynamic value,
-                              Widget? child) {
-                            return InkWell(
-                              onTap: () {
-                                isRemembered.value = !isRemembered.value;
-                              },
-                              child: Icon(
-                                isRemembered.value
-                                    ? Icons.check_box_outline_blank
-                                    : Icons.check_box,
-                                size: 15.sp,
-                                color: appColors.shadowColor,
-                              ),
-                            );
-                          },
-                        ),
-                        SizedBox(width: 1.w),
-                        Text(
-                          "Remember me",
-                          style: appFonts.buttonTextStyle,
-                        )
-                      ],
-                    ),
-                    SizedBox(height: 2.h),
-                    ValueListenableBuilder(
-                      valueListenable: isLoading,
-                      builder:
-                          (BuildContext context, dynamic value, Widget? child) {
-                        return isLoading.value == true
-                            ? const Center(
-                                child: CircularProgressIndicator.adaptive(),
-                              )
-                            : LoginButton(
-                                emailController: emailController,
-                                passwordController: passwordController,
-                                onPressed: () async {
-                                  if (formKey.currentState!.validate()) {
-                                    isLoading.value = true;
-                                    try {
-                                      await controller.login(
-                                        emailAdress: emailController.text,
-                                        password: passwordController.text,
-                                      );
-                                    } finally {
-                                      isLoading.value = false;
-                                    }
-                                  }
+                          );
+                        },
+                      ),
+                      SizedBox(height: 2.h),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          ValueListenableBuilder(
+                            valueListenable: isRemembered,
+                            builder: (BuildContext context, dynamic value,
+                                Widget? child) {
+                              return InkWell(
+                                onTap: () {
+                                  isRemembered.value = !isRemembered.value;
                                 },
+                                child: Icon(
+                                  isRemembered.value
+                                      ? Icons.check_box_outline_blank
+                                      : Icons.check_box,
+                                  size: 15.sp,
+                                  color: appColors.shadowColor,
+                                ),
                               );
-                      },
-                    ),
-                  ],
-                ),
-                const SignupWidget()
-              ],
+                            },
+                          ),
+                          SizedBox(width: 1.w),
+                          Text(
+                            "Remember me",
+                            style: appFonts.buttonTextStyle,
+                          )
+                        ],
+                      ),
+                      SizedBox(height: 2.h),
+                      ValueListenableBuilder(
+                        valueListenable: isLoading,
+                        builder: (BuildContext context, dynamic value,
+                            Widget? child) {
+                          return isLoading.value == true
+                              ? const Center(
+                                  child: CircularProgressIndicator.adaptive(),
+                                )
+                              : LoginButton(
+                                  emailController: emailController,
+                                  passwordController: passwordController,
+                                  onPressed: () async {
+                                    if (formKey.currentState!.validate()) {
+                                      isLoading.value = true;
+                                      try {
+                                        await controller.login(
+                                          emailAdress: emailController.text,
+                                          password: passwordController.text,
+                                        );
+                                      } finally {
+                                        isLoading.value = false;
+                                      }
+                                    }
+                                  },
+                                );
+                        },
+                      ),
+                    ],
+                  ),
+                  const SignupWidget()
+                ],
+              ),
             ),
           ),
         ),

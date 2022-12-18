@@ -5,11 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:forecasting_app/controllers/onboarding_controller.dart';
 import 'package:forecasting_app/utils/widgets/background_widget.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 import 'package:sizer/sizer.dart';
-
 import '../controllers/weather_data_controller.dart';
 import '../main.dart';
 import 'detail_screen.dart';
+import 'sign_in_screen.dart';
 
 class ForecastScreen extends StatefulWidget {
   const ForecastScreen({super.key});
@@ -97,18 +98,18 @@ class _ForecastScreenState extends State<ForecastScreen> {
             child: BackgroundWidget(
           today: today,
           child: isLoading
-              ? const Center(
-                  child: CircularProgressIndicator.adaptive(),
+              ? Center(
+                  child: Lottie.asset("assets/loading.json"),
                 )
               : SingleChildScrollView(
-                child: Column(
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Image(
@@ -150,41 +151,72 @@ class _ForecastScreenState extends State<ForecastScreen> {
                                   context: context,
                                   builder: (context) {
                                     return AlertDialog(
-                                      title: const Text("Log out"),
-                                      content:
-                                          const Text("Do you want to log out?"),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          child: const Text("No"),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(20.sp),
+                                      ),
+                                      title: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              color: appColors.shadowRedColor,
+                                              shape: BoxShape.circle,
+                                            ),
+                                            padding: EdgeInsets.all(15.sp),
+                                            child: Image(
+                                              image:
+                                                  AssetImage(appIcons.logOut),
+                                              height: 10.h,
+                                            ),
+                                          ),
+                                          SizedBox(height: 2.h),
+                                          Text(
+                                            "Log out",
+                                            style: appFonts.titleStyle.copyWith(
+                                              color: Colors.black,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      content: Text(
+                                        "Are you sure you want to logout from app",
+                                        style: appFonts.bodyStyle.copyWith(
+                                          fontSize: 10.sp,
                                         ),
-                                        TextButton(
+                                      ),
+                                      actionsAlignment:
+                                          MainAxisAlignment.center,
+                                      alignment: Alignment.center,
+                                      actions: [
+                                        ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            elevation: 0,
+                                            foregroundColor:
+                                                appColors.whiteColor,
+                                            backgroundColor: appColors.redColor,
+                                          ),
+                                          onPressed: () async {
+                                            Get.off(() => const SignInScreen());
+                                          },
+                                          child: const Text("Logout"),
+                                        ),
+                                        ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            elevation: 1,
+                                            foregroundColor:
+                                                appColors.blackColor,
+                                            backgroundColor: appColors
+                                                .blackColor
+                                                .withOpacity(.002),
+                                          ),
                                           onPressed: () async {
                                             Navigator.pop(context);
-              
-                                            try {
-                                              setState(() {
-                                                isLoading = true;
-                                              });
-              
-                                              showDialog(
-                                                  barrierDismissible: false,
-                                                  context: context,
-                                                  builder: (context) {
-                                                    return const AlertDialog(
-                                                      content:
-                                                          Text("logging out ..."),
-                                                    );
-                                                  });
-                                            } finally {
-                                              setState(() {
-                                                isLoading = false;
-                                              });
-                                            }
                                           },
-                                          child: const Text("Yes"),
+                                          child: const Text("Cancel"),
                                         ),
                                       ],
                                     );
@@ -305,7 +337,12 @@ class _ForecastScreenState extends State<ForecastScreen> {
                             backgroundColor: appColors.whiteColor,
                           ),
                           onPressed: selectedCity == "Choose state"
-                              ? null
+                              ? () {
+                                  Get.snackbar(
+                                    "Choose State",
+                                    "Choose a state to load data",
+                                  );
+                                }
                               : () {
                                   Get.to(() => DetailScreen(
                                         otherForecastModel:
@@ -334,7 +371,7 @@ class _ForecastScreenState extends State<ForecastScreen> {
                       )
                     ],
                   ),
-              ),
+                ),
         )),
       ),
     );
