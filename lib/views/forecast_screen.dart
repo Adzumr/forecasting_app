@@ -9,6 +9,7 @@ import 'package:lottie/lottie.dart';
 import 'package:sizer/sizer.dart';
 import '../controllers/weather_data_controller.dart';
 import '../main.dart';
+import '../utils/widgets/weather_data_card_widget.dart';
 import 'detail_screen.dart';
 import 'sign_in_screen.dart';
 
@@ -98,276 +99,34 @@ class _ForecastScreenState extends State<ForecastScreen> {
             child: BackgroundWidget(
           today: today,
           child: isLoading
-              ? Center(
-                  child: Lottie.asset("assets/loading.json"),
-                )
+              ? const LoadingWidget()
               : SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Image(
-                                image: AssetImage(appIcons.locationIcon),
-                                color: Colors.white,
-                                height: 3.5.h,
-                              ),
-                              SizedBox(width: 2.w),
-                              SizedBox(
-                                width: 40.w,
-                                child: PopupMenuButton(
-                                  itemBuilder: (context) => cityList,
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Flexible(
-                                        child: Text(
-                                          selectedCity!,
-                                          style: appFonts.titleStyle.copyWith(
-                                            color: Colors.white,
-                                          ),
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                      const Icon(
-                                        Icons.expand_more,
-                                        color: Colors.white,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          InkWell(
-                            onTap: () {
-                              showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return AlertDialog(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(20.sp),
-                                      ),
-                                      title: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Container(
-                                            decoration: BoxDecoration(
-                                              color: appColors.shadowRedColor,
-                                              shape: BoxShape.circle,
-                                            ),
-                                            padding: EdgeInsets.all(15.sp),
-                                            child: Image(
-                                              image:
-                                                  AssetImage(appIcons.logOut),
-                                              height: 10.h,
-                                            ),
-                                          ),
-                                          SizedBox(height: 2.h),
-                                          Text(
-                                            "Log out",
-                                            style: appFonts.titleStyle.copyWith(
-                                              color: Colors.black,
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                      content: Text(
-                                        "Are you sure you want to logout from app",
-                                        style: appFonts.bodyStyle.copyWith(
-                                          fontSize: 10.sp,
-                                        ),
-                                      ),
-                                      actionsAlignment:
-                                          MainAxisAlignment.center,
-                                      alignment: Alignment.center,
-                                      actions: [
-                                        ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                            elevation: 0,
-                                            foregroundColor:
-                                                appColors.whiteColor,
-                                            backgroundColor: appColors.redColor,
-                                          ),
-                                          onPressed: () async {
-                                            Get.off(() => const SignInScreen());
-                                          },
-                                          child: const Text("Logout"),
-                                        ),
-                                        ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                            elevation: 1,
-                                            foregroundColor:
-                                                appColors.blackColor,
-                                            backgroundColor: appColors
-                                                .blackColor
-                                                .withOpacity(.002),
-                                          ),
-                                          onPressed: () async {
-                                            Navigator.pop(context);
-                                          },
-                                          child: const Text("Cancel"),
-                                        ),
-                                      ],
-                                    );
-                                  });
-                            },
-                            child: Image(
-                              image: AssetImage(appIcons.logOut),
-                              height: 3.h,
-                            ),
-                          ),
-                        ],
+                      DropDownWidget(
+                        cityList: cityList,
+                        selectedCity: selectedCity,
                       ),
                       SizedBox(height: 4.h),
-                      Image(
-                        image: AssetImage(
-                          condition == "Cloudy"
-                              ? appIcons.cloudyIcon
-                              : condition == "Sunny"
-                                  ? appIcons.sunnyIcon
-                                  : condition == "Rainy"
-                                      ? appIcons.rainyIcon
-                                      : condition == "Partly Cloudy"
-                                          ? appIcons.partlyCloudIcon
-                                          : condition == "snow"
-                                              ? appIcons.snowIcon
-                                              : condition == "Stormy"
-                                                  ? appIcons.stormyIcon
-                                                  : condition == "Thunder"
-                                                      ? appIcons.thunderIcon
-                                                      : appIcons.cloudyIcon,
-                        ),
-                        height: 20.h,
-                        fit: BoxFit.contain,
+                      ConditionImageWidget(
+                        condition: condition,
                       ),
                       SizedBox(height: 2.h),
-                      Container(
-                        decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(.3),
-                            borderRadius: BorderRadius.circular(15),
-                            border: Border.all(
-                              width: 1.sp,
-                              color: appColors.whiteColor,
-                            )),
-                        padding: EdgeInsets.all(15.sp),
-                        margin: EdgeInsets.all(5.sp),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Text(
-                              today,
-                              textAlign: TextAlign.center,
-                              style: appFonts.titleStyle.copyWith(
-                                color: appColors.whiteColor,
-                              ),
-                            ),
-                            SizedBox(height: 1.h),
-                            Text(
-                              temperature ??
-                                  "${controller.loginModel!.liveWeather!.temperature}°",
-                              textAlign: TextAlign.center,
-                              style: appFonts.subHeadingStyle.copyWith(
-                                fontSize: 40.sp,
-                                color: appColors.whiteColor,
-                              ),
-                            ),
-                            SizedBox(height: 1.h),
-                            Text(
-                              condition ??
-                                  "${controller.loginModel!.liveWeather!.condition}",
-                              textAlign: TextAlign.center,
-                              style: appFonts.subHeadingStyle.copyWith(
-                                color: appColors.whiteColor,
-                              ),
-                            ),
-                            SizedBox(height: 2.h),
-                            InfoWidget(
-                              name: "Time",
-                              data: TimeOfDay.now().format(context),
-                            ),
-                            InfoWidget(
-                              name: "Temparature",
-                              data: temperature ??
-                                  "${controller.loginModel!.liveWeather!.temperature}",
-                            ),
-                            InfoWidget(
-                              name: "Max Temparature",
-                              data: maxTemperature ??
-                                  "${controller.loginModel!.liveWeather!.maxTemperature}",
-                            ),
-                            InfoWidget(
-                              name: "Min Temparature",
-                              data: minTemperature ??
-                                  "${controller.loginModel!.liveWeather!.minTemperature}",
-                            ),
-                            InfoWidget(
-                              name: "Condition",
-                              data: condition ??
-                                  "${controller.loginModel!.liveWeather!.condition}",
-                            ),
-                            InfoWidget(
-                              name: "WindSpeed",
-                              data: windSpeed ??
-                                  "${controller.loginModel!.liveWeather!.windSpeed}",
-                            ),
-                            InfoWidget(
-                              name: "Humidty",
-                              data: humidity ??
-                                  "${controller.loginModel!.liveWeather!.humidity}",
-                            ),
-                          ],
-                        ),
+                      WeatherDataCard(
+                        today: today,
+                        temperature: temperature,
+                        controller: controller,
+                        condition: condition,
+                        maxTemperature: maxTemperature,
+                        minTemperature: minTemperature,
+                        windSpeed: windSpeed,
+                        humidity: humidity,
                       ),
                       SizedBox(height: 4.h),
-                      Container(
-                        margin: EdgeInsets.symmetric(horizontal: 40.sp),
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: appColors.whiteColor,
-                          ),
-                          onPressed: selectedCity == "Choose state"
-                              ? () {
-                                  Get.snackbar(
-                                    "Choose State",
-                                    "Choose a state to load data",
-                                  );
-                                }
-                              : () {
-                                  Get.to(() => DetailScreen(
-                                        otherForecastModel:
-                                            weatherCotroller.otherForecastModel,
-                                        smallForecastModel:
-                                            weatherCotroller.smallForecastModel,
-                                      ));
-                                },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "Forecast report",
-                                style: appFonts.buttonTextStyle
-                                    .copyWith(fontSize: 14.sp),
-                              ),
-                              SizedBox(width: 4.w),
-                              Icon(
-                                Icons.arrow_forward_ios,
-                                size: 12.sp,
-                                color: appColors.blackColor,
-                              )
-                            ],
-                          ),
-                        ),
+                      ForecastReportButton(
+                        selectedCity: selectedCity,
+                        weatherCotroller: weatherCotroller,
                       )
                     ],
                   ),
@@ -378,61 +137,230 @@ class _ForecastScreenState extends State<ForecastScreen> {
   }
 }
 
-class InfoWidget extends StatelessWidget {
-  const InfoWidget({
-    required this.data,
-    required this.name,
+class ForecastReportButton extends StatelessWidget {
+  const ForecastReportButton({
     Key? key,
+    required this.selectedCity,
+    required this.weatherCotroller,
   }) : super(key: key);
-  final String? name;
-  final String? data;
+
+  final String? selectedCity;
+  final WeatherDataController weatherCotroller;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 10.sp),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              Image(
-                image: AssetImage(appIcons.bullet),
-                height: 2.h,
-              ),
-              SizedBox(width: 3.w),
-              Text(
-                "$name",
-                style:
-                    appFonts.titleStyle.copyWith(color: appColors.whiteColor),
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              Text(
-                "$data",
-                textAlign: TextAlign.right,
-                style:
-                    appFonts.titleStyle.copyWith(color: appColors.whiteColor),
-              ),
-              Text(
-                name == "Condition"
-                    ? ""
-                    : name == "Time"
-                        ? ""
-                        : name == "Humidty"
-                            ? " %"
-                            : name == "WindSpeed"
-                                ? " km/h"
-                                : " °C",
-                style:
-                    appFonts.titleStyle.copyWith(color: appColors.whiteColor),
-              ),
-            ],
-          ),
-        ],
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 40.sp),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: appColors.whiteColor,
+        ),
+        onPressed: selectedCity == "Choose state"
+            ? () {
+                Get.snackbar(
+                  "Choose State",
+                  "Choose a state to load data",
+                );
+              }
+            : () {
+                Get.to(() => DetailScreen(
+                      otherForecastModel: weatherCotroller.otherForecastModel,
+                      smallForecastModel: weatherCotroller.smallForecastModel,
+                    ));
+              },
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              "Forecast report",
+              style: appFonts.buttonTextStyle.copyWith(fontSize: 14.sp),
+            ),
+            SizedBox(width: 4.w),
+            Icon(
+              Icons.arrow_forward_ios,
+              size: 12.sp,
+              color: appColors.blackColor,
+            )
+          ],
+        ),
       ),
+    );
+  }
+}
+
+class ConditionImageWidget extends StatelessWidget {
+  const ConditionImageWidget({
+    Key? key,
+    required this.condition,
+  }) : super(key: key);
+
+  final String? condition;
+
+  @override
+  Widget build(BuildContext context) {
+    return Image(
+      image: AssetImage(
+        condition == "Cloudy"
+            ? appIcons.cloudyIcon
+            : condition == "Sunny"
+                ? appIcons.sunnyIcon
+                : condition == "Rainy"
+                    ? appIcons.rainyIcon
+                    : condition == "Partly Cloudy"
+                        ? appIcons.partlyCloudIcon
+                        : condition == "snow"
+                            ? appIcons.snowIcon
+                            : condition == "Stormy"
+                                ? appIcons.stormyIcon
+                                : condition == "Thunder"
+                                    ? appIcons.thunderIcon
+                                    : appIcons.cloudyIcon,
+      ),
+      height: 20.h,
+      fit: BoxFit.contain,
+    );
+  }
+}
+
+class DropDownWidget extends StatelessWidget {
+  const DropDownWidget({
+    Key? key,
+    required this.cityList,
+    required this.selectedCity,
+  }) : super(key: key);
+
+  final List<PopupMenuItem> cityList;
+  final String? selectedCity;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image(
+              image: AssetImage(appIcons.locationIcon),
+              color: Colors.white,
+              height: 3.5.h,
+            ),
+            SizedBox(width: 2.w),
+            SizedBox(
+              width: 40.w,
+              child: PopupMenuButton(
+                itemBuilder: (context) => cityList,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        selectedCity!,
+                        style: appFonts.titleStyle.copyWith(
+                          color: Colors.white,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    const Icon(
+                      Icons.expand_more,
+                      color: Colors.white,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+        InkWell(
+          onTap: () {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.sp),
+                    ),
+                    title: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: appColors.shadowRedColor,
+                            shape: BoxShape.circle,
+                          ),
+                          padding: EdgeInsets.all(15.sp),
+                          child: Image(
+                            image: AssetImage(appIcons.logOut),
+                            height: 10.h,
+                          ),
+                        ),
+                        SizedBox(height: 2.h),
+                        Text(
+                          "Log out",
+                          style: appFonts.titleStyle.copyWith(
+                            color: Colors.black,
+                          ),
+                        )
+                      ],
+                    ),
+                    content: Text(
+                      "Are you sure you want to logout from app",
+                      style: appFonts.bodyStyle.copyWith(
+                        fontSize: 10.sp,
+                      ),
+                    ),
+                    actionsAlignment: MainAxisAlignment.center,
+                    alignment: Alignment.center,
+                    actions: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          elevation: 0,
+                          foregroundColor: appColors.whiteColor,
+                          backgroundColor: appColors.redColor,
+                        ),
+                        onPressed: () async {
+                          Get.off(() => const SignInScreen());
+                        },
+                        child: const Text("Logout"),
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          elevation: 1,
+                          foregroundColor: appColors.blackColor,
+                          backgroundColor:
+                              appColors.blackColor.withOpacity(.002),
+                        ),
+                        onPressed: () async {
+                          Navigator.pop(context);
+                        },
+                        child: const Text("Cancel"),
+                      ),
+                    ],
+                  );
+                });
+          },
+          child: Image(
+            image: AssetImage(appIcons.logOut),
+            height: 3.h,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class LoadingWidget extends StatelessWidget {
+  const LoadingWidget({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Lottie.asset("assets/loading.json"),
     );
   }
 }

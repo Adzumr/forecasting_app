@@ -4,7 +4,7 @@
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.android.permission.ACCESS_NETWORK_STATE"/>
    <application
-        android:label="Forecasting App"
+        android:label="Forecast"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
