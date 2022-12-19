@@ -6,6 +6,8 @@ import 'package:forecasting_app/views/onboarding_screen.dart';
 import 'package:get/route_manager.dart';
 import 'package:sizer/sizer.dart';
 
+import 'views/error_screen.dart';
+
 void main() {
   runApp(const ForecastingApp());
 }
@@ -23,6 +25,12 @@ class ForecastingApp extends StatelessWidget {
     return Sizer(
       builder: ((context, orientation, deviceType) {
         return GetMaterialApp(
+          builder: (BuildContext context, Widget? widget) {
+            ErrorWidget.builder = (FlutterErrorDetails errorDetails) {
+              return const CustomErrorScreen();
+            };
+            return widget!;
+          },
           debugShowCheckedModeBanner: false,
           title: 'Forecasting App',
           theme: ThemeData(

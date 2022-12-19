@@ -15,8 +15,21 @@ class BackgroundWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
       height: MediaQuery.of(context).size.height,
+      width: MediaQuery.of(context).size.width,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            appColors.gradientColor1,
+            appColors.gradientColor2,
+            appColors.gradientColor2,
+          ],
+        ),
+      ),
+      padding: EdgeInsets.all(20.sp),
       child: Stack(
         children: [
           Positioned(
@@ -36,23 +49,7 @@ class BackgroundWidget extends StatelessWidget {
               ),
             ),
           ),
-          Container(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  appColors.gradientColor1,
-                  appColors.gradientColor2,
-                  appColors.gradientColor2,
-                ],
-              ),
-            ),
-            padding: EdgeInsets.all(20.sp),
-            child: child,
-          ),
+          child!,
         ],
       ),
     );

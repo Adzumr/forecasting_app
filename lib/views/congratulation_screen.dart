@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:forecasting_app/views/sign_in_screen.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
 
@@ -51,7 +53,9 @@ class CongratulationScreens extends StatelessWidget {
                 ],
               ),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  Get.off(() => const SignInScreen());
+                },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

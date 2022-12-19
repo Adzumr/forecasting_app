@@ -89,7 +89,7 @@ class _DetailScreenState extends State<DetailScreen> {
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     shrinkWrap: true,
-                    itemCount: widget.smallForecastModel!.data!.length,
+                    itemCount: 6,
                     itemBuilder: (BuildContext context, int index) {
                       final smallWeather =
                           widget.smallForecastModel!.data![index];
